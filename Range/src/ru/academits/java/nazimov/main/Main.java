@@ -1,4 +1,6 @@
-package ru.academits.java.nazimov.range;
+package ru.academits.java.nazimov.main;
+
+import ru.academits.java.nazimov.range.Range;
 
 public class Main {
     public static void main(String[] args) {
@@ -9,8 +11,7 @@ public class Main {
                 range1.getFrom(), range1.getTo(), range1.isInside(number));
         System.out.println();
 
-        System.out.println("From = " + range1.getFrom());
-        System.out.println("To = " + range1.getTo());
+        range1.print();
         System.out.println();
 
         range1.setFrom(1.7);
@@ -24,29 +25,21 @@ public class Main {
         System.out.println("Length = " + range1.getLength());
         System.out.println();
 
-        Range range2 = new Range(6, 9);
-        Range[] range3 = range1.getIntervalsConcatenation(range2);
-
-        for (Range e : range3) {
-            e.print();
-        }
+        Range range2 = new Range(5.2, 9);
+        Range[] union = range1.getUnion(range2);
+        Range.printArray(union);
 
         System.out.println();
-        Range range4 = range2.getIntervalsIntersection(range1);
+        Range intersection = range2.getIntersection(range1);
 
-        if (range4 != null) {
-            range4.print();
+        if (intersection != null) {
+            intersection.print();
         } else {
             System.out.println("Range4 = null");
         }
 
         System.out.println();
-        Range[] range5 = range1.getIntervalDifference(range2);
-
-        for (Range e : range5) {
-            e.print();
-        }
-
-        System.out.println();
+        Range[] difference = range2.getDifference(range1);
+        Range.printArray(difference);
     }
 }

@@ -1,24 +1,16 @@
 package ru.academits.java.nazimov.range;
 
 public class Range {
-    double from;
-    double to;
+    private double from;
+    private double to;
 
     public Range(double from, double to) {
-        if (from < to) {
-            this.from = from;
-            this.to = to;
-        } else {
-            this.from = to;
-            this.to = from;
-        }
-    }
-
-    public Range() {
+        this.from = from;
+        this.to = to;
     }
 
     public double getFrom() {
-        return this.from;
+        return from;
     }
 
     public void setFrom(double from) {
@@ -26,7 +18,7 @@ public class Range {
     }
 
     public double getTo() {
-        return this.to;
+        return to;
     }
 
     public void setTo(double to) {
@@ -34,8 +26,21 @@ public class Range {
     }
 
     public void print() {
-        System.out.println("From = " + this.getFrom());
-        System.out.println("To = " + this.getTo());
+        System.out.printf("(%.1f; %.1f)", from, to);
+    }
+
+    public static void printArray(Range[] ranges) {
+        System.out.print("[");
+
+        for (int i = 0; i < ranges.length; i++) {
+            ranges[i].print();
+
+            if (i < ranges.length - 1) {
+                System.out.print(", ");
+            }
+        }
+
+        System.out.println("]");
     }
 
     public double getLength() {
@@ -46,60 +51,39 @@ public class Range {
         return number >= from && number <= to;
     }
 
-    public Range getIntervalsIntersection(Range range) {
-        double rangeFrom = range.getFrom();
-        double rangeTo = range.getTo();
-
-        if (from < rangeFrom && to > rangeTo || from > rangeFrom && to < rangeTo) {
-            double maxFrom = Math.max(from, rangeFrom);
-            double minTo = Math.min(to, rangeTo);
-            return new Range(maxFrom, minTo);
-        }
-
-        if (to > rangeTo && from < rangeTo) {
-            return new Range(from, rangeTo);
-        }
-
-        if (to < rangeTo && to > rangeFrom) {
-            return new Range(rangeFrom, to);
+    public Range getIntersection(Range range) {
+        if (Math.max(from, range.from) < Math.min(to, range.to)) {
+            return new Range(Math.max(from, range.from), Math.min(to, range.to));
         }
 
         return null;
     }
 
-    public Range[] getIntervalsConcatenation(Range range) {
-        double rangeFrom = range.getFrom();
-        double rangeTo = range.getTo();
-
-        if (from <= rangeTo && to >= rangeFrom) {
-            double minFrom = Math.min(from, rangeFrom);
-            double maxTo = Math.max(to, rangeTo);
-            return new Range[]{new Range(minFrom, maxTo)};
+    public Range[] getUnion(Range range) {
+        if (from <= range.to && to >= range.from) {
+            return new Range[]{new Range(Math.min(from, range.from), Math.max(to, range.to))};
         }
 
-        return new Range[]{new Range(from, to), new Range(rangeFrom, rangeTo)};
+        return new Range[]{new Range(from, to), new Range(range.from, range.to)};
     }
 
-    public Range[] getIntervalDifference(Range range) {
-        double rangeFrom = range.getFrom();
-        double rangeTo = range.getTo();
-
-        if (from >= rangeFrom && to <= rangeTo) {
-            return new Range[]{new Range()};
+    public Range[] getDifference(Range range) {
+        if (from >= range.from && to <= range.to) {
+            return new Range[]{};
         }
 
-        if (to > rangeFrom && from < rangeFrom && to < rangeTo) {
-            return new Range[]{new Range(from, rangeFrom)};
+        if (to > range.from && from < range.from && to < range.to) {
+            return new Range[]{new Range(from, range.from)};
         }
 
-        if (to > rangeTo && from < rangeTo && from > rangeFrom) {
-            return new Range[]{new Range(rangeTo, to)};
+        if (to > range.to && from < range.to && from > range.from) {
+            return new Range[]{new Range(range.to, to)};
         }
 
-        if (from < rangeFrom && to > rangeTo) {
-            return new Range[]{new Range(from, rangeFrom), new Range(rangeTo, to)};
+        if (from < range.from && to > range.to) {
+            return new Range[]{new Range(from, range.from), new Range(range.to, to)};
         }
 
-        return new Range[]{new Range(from, to), new Range(rangeFrom, rangeTo)};
+        return new Range[]{new Range(from, to), new Range(range.from, range.to)};
     }
 }
