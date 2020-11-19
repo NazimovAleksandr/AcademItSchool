@@ -7,6 +7,10 @@ public class Rectangle implements Shape {
     private final double height;
 
     public Rectangle(double width, double height) {
+        if (width <= 0 || height <= 0) {
+            throw new IllegalArgumentException("Стороны прямоугольника не должны равняться нулю или быть отрицательными");
+        }
+
         this.width = width;
         this.height = height;
     }
@@ -48,12 +52,11 @@ public class Rectangle implements Shape {
 
         Rectangle rectangle = (Rectangle) object;
 
-        return Double.compare(rectangle.width, width) == 0 &&
-                Double.compare(rectangle.height, height) == 0;
+        return rectangle.width == width && rectangle.height == height;
     }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(new double[]{width, height});
+        return Double.hashCode(width) + Double.hashCode(height);
     }
 }

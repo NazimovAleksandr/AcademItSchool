@@ -1,6 +1,6 @@
 package ru.academits.java.nazimov.shape;
 
-public final class Square implements Shape {
+public class Square implements Shape {
     private final double sideLength;
 
     public Square(double sideLength) {
@@ -37,11 +37,6 @@ public final class Square implements Shape {
     }
 
     @Override
-    public int hashCode() {
-        return Double.hashCode(sideLength);
-    }
-
-    @Override
     public boolean equals(Object object) {
         if (object == this) {
             return true;
@@ -54,5 +49,10 @@ public final class Square implements Shape {
         Square square = (Square) object;
 
         return sideLength == square.sideLength;
+    }
+
+    @Override
+    public int hashCode() {
+        return Double.hashCode(sideLength);
     }
 }
