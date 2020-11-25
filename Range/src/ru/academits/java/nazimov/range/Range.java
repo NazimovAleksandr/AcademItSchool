@@ -67,6 +67,7 @@ public class Range {
         return new Range[]{new Range(from, to), new Range(range.from, range.to)};
     }
 
+    // Много ошибок, только не знаю каких
     public Range[] getDifference(Range range) {
         if (from >= range.from && to <= range.to) {
             return new Range[]{};
@@ -84,6 +85,6 @@ public class Range {
             return new Range[]{new Range(from, range.from), new Range(range.to, to)};
         }
 
-        return new Range[]{new Range(from, to), new Range(range.from, range.to)};
+        return new Range[]{new Range(from, to)};
     }
 }

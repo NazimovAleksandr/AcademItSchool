@@ -1,4 +1,4 @@
-package ru.academits.java.nazimov.main;
+package ru.academits.java.nazimov.range_main;
 
 import ru.academits.java.nazimov.range.Range;
 
@@ -15,12 +15,11 @@ public class Main {
         System.out.println();
 
         range1.setFrom(1.7);
-        range1.setTo(5.2);
+        range1.setTo(6);
 
         System.out.printf("Находится ли число %.2f в деапазоне чисел от %.2f до %.2f?%n%b%n", number,
                 range1.getFrom(), range1.getTo(), range1.isInside(number));
         System.out.println();
-
 
         System.out.println("Length = " + range1.getLength());
         System.out.println();
@@ -39,7 +38,7 @@ public class Main {
         }
 
         System.out.println();
-        Range[] difference = range2.getDifference(range1);
+        Range[] difference = range1.getDifference(range2);
         Range.printArray(difference);
     }
 }
