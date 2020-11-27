@@ -1,7 +1,5 @@
 package ru.academits.java.nazimov.shape;
 
-import java.util.Objects;
-
 public class Triangle implements Shape {
     private final double x1;
     private final double y1;
@@ -29,7 +27,7 @@ public class Triangle implements Shape {
         this.y3 = y3;
     }
 
-    public double getSide(double x1, double y1, double x2, double y2) {
+    private static double getSideLength(double x1, double y1, double x2, double y2) {
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     }
 
@@ -45,9 +43,9 @@ public class Triangle implements Shape {
 
     @Override
     public double getArea() {
-        double sideA = getSide(x1, y1, x2, y2);
-        double sideB = getSide(x2, y2, x3, y3);
-        double sideC = getSide(x1, y1, x3, y3);
+        double sideA = getSideLength(x1, y1, x2, y2);
+        double sideB = getSideLength(x2, y2, x3, y3);
+        double sideC = getSideLength(x1, y1, x3, y3);
 
         double halfPerimeter = (sideA + sideB + sideC) / 2;
 
@@ -57,12 +55,12 @@ public class Triangle implements Shape {
 
     @Override
     public double getPerimeter() {
-        return getSide(x1, y1, x2, y2) + getSide(x2, y2, x3, y3) + getSide(x1, y1, x3, y3);
+        return getSideLength(x1, y1, x2, y2) + getSideLength(x2, y2, x3, y3) + getSideLength(x1, y1, x3, y3);
     }
 
     @Override
     public String toString() {
-        return "Triangle { (" + x1 + "; " + y1 +
+        return "{ Triangle: (" + x1 + "; " + y1 +
                 "), (" + x2 + "; " + y2 +
                 "), (" + x3 + "; " + y3 + ") }";
     }
@@ -89,6 +87,18 @@ public class Triangle implements Shape {
 
     @Override
     public int hashCode() {
-        return Objects.hash(x1, y1, x2, y2, x3, y3);
+        final int prime = 37;
+        int hash = 1;
+
+        hash = prime * hash + Double.hashCode(x1);
+        hash = prime * hash + Double.hashCode(y1);
+
+        hash = prime * hash + Double.hashCode(x2);
+        hash = prime * hash + Double.hashCode(y2);
+
+        hash = prime * hash + Double.hashCode(x3);
+        hash = prime * hash + Double.hashCode(y3);
+
+        return hash;
     }
 }

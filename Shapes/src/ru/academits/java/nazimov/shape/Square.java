@@ -5,7 +5,7 @@ public class Square implements Shape {
 
     public Square(double sideLength) {
         if (sideLength <= 0) {
-            throw new IllegalArgumentException("Стороны квадрата не должны равняться нулю или быть отрицательными");
+            throw new IllegalArgumentException("Стороны квадрата не должны равняться нулю или быть отрицательными (sideLength: " + sideLength + ")");
         }
 
         this.sideLength = sideLength;
@@ -33,7 +33,7 @@ public class Square implements Shape {
 
     @Override
     public String toString() {
-        return "Square { sideLength = " + sideLength + " }";
+        return "{ Square: sideLength = " + sideLength + " }";
     }
 
     @Override

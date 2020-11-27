@@ -5,7 +5,7 @@ public class Circle implements Shape {
 
     public Circle(double radius) {
         if (radius <= 0) {
-            throw new IllegalArgumentException("Радиус круга не должн равняться нулю или быть отрицательным");
+            throw new IllegalArgumentException("Радиус круга не должн равняться нулю или быть отрицательным (radius: " + radius + ")");
         }
 
         this.radius = radius;
@@ -33,7 +33,7 @@ public class Circle implements Shape {
 
     @Override
     public String toString() {
-        return "Circle { radius=" + radius + " }";
+        return "{ Circle: radius=" + radius + " }";
     }
 
     @Override

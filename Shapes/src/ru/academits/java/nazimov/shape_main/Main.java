@@ -26,7 +26,7 @@ public class Main {
             System.out.println();
         }
 
-        Shape shapeWithSecondPerimeter = getShapeWithTheSecondLargestPerimeter(shapes);
+        Shape shapeWithSecondPerimeter = getShapeWithSecondLargestPerimeter(shapes);
 
         if (shapeWithSecondPerimeter != null) {
             System.out.printf("Shape: %s%n Width: %.2f%n Height: %.2f%n Area: %.2f%n Perimeter: %.2f%n",
@@ -44,22 +44,18 @@ public class Main {
             return shapes[0];
         }
 
-        Arrays.sort(shapes, new ComparatorArea());
+        Arrays.sort(shapes, new AreaComparator());
 
-        return shapes[0];
+        return shapes[shapes.length-1];
     }
 
-    public static Shape getShapeWithTheSecondLargestPerimeter(Shape[] shapes) {
-        if (shapes.length == 0) {
+    public static Shape getShapeWithSecondLargestPerimeter(Shape[] shapes) {
+        if (shapes.length == 0 || shapes.length == 1) {
             return null;
         }
 
-        if (shapes.length == 1) {
-            return shapes[0];
-        }
+        Arrays.sort(shapes, new PerimeterComparator());
 
-        Arrays.sort(shapes, new ComparatorPerimeter());
-
-        return shapes[1];
+        return shapes[shapes.length-2];
     }
 }
