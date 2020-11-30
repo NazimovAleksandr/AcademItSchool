@@ -9,31 +9,38 @@ import java.util.Scanner;
 public class ArrayListHome {
     public static void main(String[] args) {
         // Задача 1
-        ArrayList<String> lines = new ArrayList<>();
+        try {
+            FileReader fileReader = new FileReader("ArrayListHome/input.txt");
 
-        readFileIntoList(lines);
-        System.out.println("ArrayList (read from file) " + lines);
+            ArrayList<String> lines = readLinesFromFile(fileReader);
+
+            System.out.println("ArrayList, read from file: " + lines);
+        } catch (FileNotFoundException e) {
+            System.out.println("File Not Found");
+        }
+
 
         // Задача 2
         ArrayList<Integer> numbers = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 3, 1, 7, 5, 6, 6, 7));
 
         removeEvenNumbers(numbers);
-        System.out.println("ArrayList (remove even numbers) " + numbers);
+        System.out.println("ArrayList, remove even numbers: " + numbers);
 
         // Задача 3
-        ArrayList<Integer> uniqueNumbers = removeDuplicates(numbers);
+        ArrayList<Integer> uniqueNumbers = getListWithoutDuplicates(numbers);
 
-        System.out.println("ArrayList (unique lines) " + uniqueNumbers);
+        System.out.println("ArrayList, unique numbers: " + uniqueNumbers);
     }
 
-    public static void readFileIntoList(ArrayList<String> arrayList) {
-        try (Scanner scanner = new Scanner(new FileReader("ArrayListHome/input.txt"))) {
-            while (scanner.hasNext()) {
-                arrayList.add(scanner.nextLine());
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("File Not Found");
+    public static ArrayList<String> readLinesFromFile(FileReader fileReader) {
+        Scanner scanner = new Scanner(fileReader);
+        ArrayList<String> arrayList = new ArrayList<>();
+
+        while (scanner.hasNextLine()) {
+            arrayList.add(scanner.nextLine());
         }
+
+        return arrayList;
     }
 
     public static void removeEvenNumbers(ArrayList<Integer> arrayList) {
@@ -45,21 +52,13 @@ public class ArrayListHome {
         }
     }
 
-    public static ArrayList<Integer> removeDuplicates(ArrayList<Integer> arrayList) {
-        ArrayList<Integer> uniqueNumbers = new ArrayList<>();
-        uniqueNumbers.ensureCapacity(arrayList.size());
+    public static ArrayList<Integer> getListWithoutDuplicates(ArrayList<Integer> arrayList) {
+        ArrayList<Integer> uniqueNumbers = new ArrayList<>(arrayList.size());
 
-        uniqueNumbers.add(arrayList.get(0));
-
-        duplicate:
-        for (Integer i : arrayList) {
-            for (Integer j : uniqueNumbers) {
-                if (i.equals(j)) {
-                    continue duplicate;
-                }
+        for (Integer e : arrayList) {
+            if (!uniqueNumbers.contains(e)) {
+                uniqueNumbers.add(e);
             }
-
-            uniqueNumbers.add(i);
         }
 
         return uniqueNumbers;
