@@ -12,26 +12,41 @@ public class Main {
 
         System.out.println("Vector1 = " + vector1);
         System.out.println("Vector2 = " + vector2);
+        System.out.println();
 
-        vector2.setComponent(6, 5);
+        vector2.setComponent(5, 6);
+        System.out.println("Vector.setComponent");
         System.out.println("Vector2 = " + vector2);
-        System.out.println("Vector2.length = " + vector2.getVectorLength());
+        System.out.println();
+
+        System.out.println("Vector2.length = " + vector2.getLength());
+        System.out.println();
 
         Vector vector3 = new Vector(vector1);
 
         System.out.println("Vector3 = " + vector3);
         System.out.println("Vector3, index 2 = " + vector3.getComponent(2));
         System.out.println("Vector3.getSize = " + vector3.getSize());
+        System.out.println();
 
-        System.out.println("Vector3 + Vector1 = " + vector3.getVectorsSum(vector1));
-        System.out.println("(Static method) Vector1 + Vector2 = " + Vector.getVectorsSum(vector1, vector2));
+        vector3.setComponent(3, 33);
+        vector1.getSum(vector3);
+        System.out.println("Vector1 + Vector3 = " + vector1);
+        System.out.println("(Static method) Vector1 + Vector2 = " + Vector.getSum(vector1, vector2));
+        System.out.println();
 
-        System.out.println("Vector3 - Vector1 = " + vector3.getVectorsDifference(vector1));
-        System.out.println("(Static method) Vector1 - Vector2 = " + Vector.getVectorsDifference(vector1, vector2));
+        vector3.getDifference(vector1);
+        System.out.println("Vector3 - Vector1 = " + vector3);
+        System.out.println("(Static method) Vector1 - Vector2 = " + Vector.getDifference(vector2, vector1));
+        System.out.println();
 
-        System.out.println("Vector3 * Scalar(4) = " + vector3.getScalarMultiplication(4));
-        System.out.println("(Static method) Vector1 * Vector2 = " + Vector.getScalarVectorsMultiplication(vector1, vector2));
+        vector3.getMultiplyByNumber(4);
+        System.out.println("Vector3 * Scalar(4) = " + vector3);
+        System.out.println("(Static method) Vector1 * Vector2 = " + Vector.getScalarProduct(vector2, vector1));
+        System.out.println();
 
-        System.out.println("Revert Vector1 = " + vector1.getRevertVector());
+        System.out.println("Vector1 = " + vector1);
+        vector1.getRevertVector();
+        System.out.println("Revert Vector1 = " + vector1);
     }
 }
