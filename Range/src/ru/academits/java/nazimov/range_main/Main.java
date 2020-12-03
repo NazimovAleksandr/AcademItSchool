@@ -14,8 +14,8 @@ public class Main {
         range1.print();
         System.out.println();
 
-        range1.setFrom(1.7);
-        range1.setTo(6);
+        range1.setFrom(3);
+        range1.setTo(7);
 
         System.out.printf("Находится ли число %.2f в деапазоне чисел от %.2f до %.2f?%n%b%n", number,
                 range1.getFrom(), range1.getTo(), range1.isInside(number));
@@ -24,7 +24,7 @@ public class Main {
         System.out.println("Length = " + range1.getLength());
         System.out.println();
 
-        Range range2 = new Range(5.2, 9);
+        Range range2 = new Range(5, 7);
         Range[] union = range1.getUnion(range2);
         Range.printArray(union);
 
