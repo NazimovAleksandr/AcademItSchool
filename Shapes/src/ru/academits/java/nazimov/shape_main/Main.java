@@ -46,7 +46,7 @@ public class Main {
 
         Arrays.sort(shapes, new AreaComparator());
 
-        return shapes[shapes.length-1];
+        return shapes[shapes.length - 1];
     }
 
     public static Shape getShapeWithSecondLargestPerimeter(Shape[] shapes) {
@@ -56,6 +56,6 @@ public class Main {
 
         Arrays.sort(shapes, new PerimeterComparator());
 
-        return shapes[shapes.length-2];
+        return shapes[shapes.length - 2];
     }
 }
