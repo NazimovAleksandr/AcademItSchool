@@ -7,151 +7,112 @@ public class List<T> {
     public List() {
     }
 
+    private void checkIndex(int index) {
+        if (index < 0 || index >= count) {
+            throw new IndexOutOfBoundsException("Интекс " + index + " за пределами длины " + count);
+        }
+    }
+
+    private ListItem<T> getListItem(int index) {
+        ListItem<T> item = head;
+
+        for (int i = 0; i < count; i++) {
+            if (i == index) {
+                return item;
+            }
+
+            item = item.getNext();
+        }
+
+        return item;
+    }
+
     public int getCount() {
         return count;
     }
 
-    public T getHeadData() {
+    public T getFirst() {
+        if (head == null) {
+            throw new NullPointerException("Список пуст, нельзя получить несуществующий элемент");
+        }
+
         return head.getData();
     }
 
     public T get(int index) {
-        if (index >= count || index < 0) {
-            throw new IllegalArgumentException("Неверный индекс");
-        }
-
-        ListItem<T> item = head;
-        T data = head.getData();
-
-        for (int i = 0; i < count; i++) {
-            if (i == index) {
-                break;
-            }
-
-            item = item.getNext();
-            data = item.getData();
-        }
-
-        return data;
+        checkIndex(index);
+        return getListItem(index).getData();
     }
 
-    public T set(T element, int index) {
-        if (index >= count || index < 0) {
-            throw new IllegalArgumentException("Неверный индекс");
-        }
+    public T set(int index, T data) {
+        checkIndex(index);
 
-        ListItem<T> item = head;
-        T data = head.getData();
+        ListItem<T> item = getListItem(index);
+        T oldData = item.getData();
 
-        for (int i = 0; i < count; i++) {
-            if (i == index) {
-                item.setData(element);
-                break;
-            }
+        item.setData(data);
 
-            item = item.getNext();
-            data = item.getData();
-        }
-
-        return data;
+        return oldData;
     }
 
     public T remove(int index) {
-        if (index >= count || index < 0) {
-            throw new IllegalArgumentException("Неверный индекс");
-        }
-
-        T data = head.getData();
+        checkIndex(index);
 
         if (index == 0) {
-            head = head.getNext();
-            count--;
-
-            return data;
+            return removeFirst();
         }
 
-        ListItem<T> prevItem = head;
-        ListItem<T> currentItem = prevItem.getNext();
+        ListItem<T> previousItem = getListItem(index - 1);
+        ListItem<T> currentItem = previousItem.getNext();
 
-        data = currentItem.getData();
+        T data = currentItem.getData();
 
-        for (int i = 1; i < count; i++) {
-            if (i == index) {
-                prevItem.setNext(currentItem.getNext());
-                count--;
-
-                break;
-            }
-
-            prevItem = currentItem;
-            currentItem = currentItem.getNext();
-            data = currentItem.getData();
-        }
+        previousItem.setNext(currentItem.getNext());
+        count--;
 
         return data;
     }
 
-    public void addToBeginning(T element) {
-        head = new ListItem<>(element, head);
+    public void addFirst(T data) {
+        head = new ListItem<>(data, head);
         count++;
     }
 
-    public void add(T element, int index) {
-        if (index > count || index < 0) {
-            throw new IllegalArgumentException("Неверный индекс");
+    public void add(int index, T data) {
+        if (index != count) {
+            checkIndex(index);
         }
 
         if (index == 0) {
-            addToBeginning(element);
+            addFirst(data);
 
             return;
         }
 
-        ListItem<T> item = new ListItem<>(element);
+        ListItem<T> item = new ListItem<>(data);
 
-        ListItem<T> prevItem = head;
-        ListItem<T> currentItem = prevItem.getNext();
+        ListItem<T> previousItem = getListItem(index - 1);
+        ListItem<T> currentItem = previousItem.getNext();
 
-        for (int i = 1; i <= count; i++) {
-            if (i == index) {
-                prevItem.setNext(item);
-                item.setNext(currentItem);
-                count++;
-
-                break;
-            }
-
-            prevItem = currentItem;
-            currentItem = currentItem.getNext();
-        }
+        previousItem.setNext(item);
+        item.setNext(currentItem);
+        count++;
     }
 
-    public void add(T element) {
-        ListItem<T> item = new ListItem<>(element);
+    public void add(T data) {
+        add(count, data);
+    }
 
+    public boolean remove(T data) {
         if (head == null) {
-            head = item;
-            count++;
-
-            return;
+            return false;
         }
 
-        for (ListItem<T> p = head; p != null; p = p.getNext()) {
-            if (p.getNext() == null) {
-                p.setNext(item);
-                count++;
-
-                break;
-            }
-        }
-    }
-
-    public boolean remove(T element) {
-        T data = head.getData();
+        T deletedData = head.getData();
         ListItem<T> item = head;
 
         for (int i = 0; i < count; i++) {
-            if (data.equals(element)) {
+            if (deletedData != null && deletedData.equals(data)) {
                 remove(i);
 
                 return true;
@@ -159,14 +120,18 @@ public class List<T> {
 
             if (i != count - 1) {
                 item = item.getNext();
-                data = item.getData();
+                deletedData = item.getData();
             }
         }
 
         return false;
     }
 
-    public T removeFirstItem() {
+    public T removeFirst() {
+        if (head == null) {
+            throw new NullPointerException("Список пуст, нельзя удалить несуществующий элемент");
+        }
+
         T data = head.getData();
         head = head.getNext();
         count--;
@@ -175,30 +140,50 @@ public class List<T> {
     }
 
     public void revert() {
-        ListItem<T> prevItem = head;
-        ListItem<T> currentItem = prevItem.getNext();
+        if (head == null || head.getNext() == null) {
+            return;
+        }
+
+        ListItem<T> previousItem = head;
+        ListItem<T> currentItem = previousItem.getNext();
         ListItem<T> nextItem = currentItem.getNext();
 
         for (int i = 1; i < count - 1; i++) {
-            currentItem.setNext(prevItem);
-            prevItem = currentItem;
+            currentItem.setNext(previousItem);
+            previousItem = currentItem;
             currentItem = nextItem;
             nextItem = nextItem.getNext();
 
             if (nextItem == null) {
                 head = currentItem;
-                head.setNext(prevItem);
+                head.setNext(previousItem);
             }
         }
     }
 
     public List<T> copy() {
         List<T> copy = new List<>();
-        ListItem<T> item = head;
 
-        for (int i = 0; i < count; i++) {
-            copy.add(item.getData(), i);
-            item = item.getNext();
+        if (head == null) {
+            return copy;
+        }
+
+        copy.head = new ListItem<>(head.getData());
+        copy.count++;
+
+        ListItem<T> previousItem = copy.head;
+
+        ListItem<T> currentItem = head.getNext();
+
+        for (int i = 1; i < count; i++) {
+            ListItem<T> copyItem = new ListItem<>(currentItem.getData());
+
+            previousItem.setNext(copyItem);
+            previousItem = copyItem;
+
+            currentItem = currentItem.getNext();
+
+            copy.count++;
         }
 
         return copy;
@@ -206,14 +191,22 @@ public class List<T> {
 
     @Override
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        ListItem<T> item = head.getNext();
-
-        for (int i = 1; i < count; i++) {
-            stringBuilder.append(item.toString());
-            item = item.getNext();
+        if (head == null) {
+            return "[]";
         }
 
-        return "{ List: " + System.lineSeparator() + head + stringBuilder.toString() + "}";
+        StringBuilder stringBuilder = new StringBuilder();
+        ListItem<T> item = head;
+
+        for (int i = 0; i < count; i++) {
+            stringBuilder.append(item.getData());
+            item = item.getNext();
+
+            if (i != count - 1) {
+                stringBuilder.append(", ");
+            }
+        }
+
+        return "[" + stringBuilder.toString() + "]";
     }
 }

@@ -6,29 +6,26 @@ public class Main {
     public static void main(String[] args) {
         List<Integer> numbers1 = new List<>();
 
-        numbers1.add(11);
-        numbers1.add(22);
         numbers1.add(33);
-        numbers1.addToBeginning(0);
-        numbers1.add(55, 4);
-        numbers1.add(44);
-        numbers1.add(55);
-        numbers1.add(66);
+        numbers1.add(33);
+        numbers1.add(11);
+        numbers1.addFirst(0);
+        numbers1.add(4, 55);
 
         System.out.println("List.getCount");
         System.out.println(numbers1.getCount());
         System.out.println();
 
         System.out.println("List.getHeadData");
-        System.out.println(numbers1.getHeadData());
+        System.out.println(numbers1.getFirst());
         System.out.println();
 
         System.out.println("List.get(index 2)");
         System.out.println(numbers1.get(2));
         System.out.println();
 
-        System.out.println("List.set(Integer 44, index 4)");
-        System.out.println(numbers1.set(44, 4));
+        System.out.println("List.set(index 4, Integer 44)");
+        System.out.println(numbers1.set(2, 44));
         System.out.println();
 
         System.out.println("List.remove(index 4)");
@@ -40,7 +37,7 @@ public class Main {
         System.out.println();
 
         System.out.println("List.removeFirstItem");
-        System.out.println(numbers1.removeFirstItem());
+        System.out.println(numbers1.removeFirst());
         System.out.println();
 
         System.out.println("List.get(index 0)");
@@ -58,9 +55,9 @@ public class Main {
         System.out.println(numbers1);
         System.out.println();
 
-        List<Integer> numbers2 = numbers1.copy();
-        numbers1.removeFirstItem();
-        System.out.println("Numbers2");
-        System.out.println(numbers2);
+        List<Integer> numbers2 = new List<>();
+        List<Integer> numbers3 = numbers2.copy();
+        System.out.println("Numbers3");
+        System.out.println(numbers3);
     }
 }
