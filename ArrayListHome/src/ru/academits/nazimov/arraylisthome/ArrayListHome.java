@@ -2,6 +2,7 @@ package ru.academits.nazimov.arraylisthome;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -9,16 +10,9 @@ import java.util.Scanner;
 public class ArrayListHome {
     public static void main(String[] args) {
         // Задача 1
-        try {
-            FileReader fileReader = new FileReader("ArrayListHome/input.txt");
+        ArrayList<String> lines = readLinesFromFile("ArrayListHome/input.txt");
 
-            ArrayList<String> lines = readLinesFromFile(fileReader);
-
-            System.out.println("ArrayList, read from file: " + lines);
-        } catch (FileNotFoundException e) {
-            System.out.println("File Not Found");
-        }
-
+        System.out.println("ArrayList, read from file: " + lines);
 
         // Задача 2
         ArrayList<Integer> numbers = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 3, 1, 7, 5, 6, 6, 7));
@@ -32,15 +26,22 @@ public class ArrayListHome {
         System.out.println("ArrayList, unique numbers: " + uniqueNumbers);
     }
 
-    public static ArrayList<String> readLinesFromFile(FileReader fileReader) {
-        Scanner scanner = new Scanner(fileReader);
-        ArrayList<String> arrayList = new ArrayList<>();
+    public static ArrayList<String> readLinesFromFile(String fileName) {
+        ArrayList<String> linesRead = new ArrayList<>();
 
-        while (scanner.hasNextLine()) {
-            arrayList.add(scanner.nextLine());
+        try (FileReader fileReader = new FileReader(fileName)) {
+            Scanner scanner = new Scanner(fileReader);
+
+            while (scanner.hasNextLine()) {
+                linesRead.add(scanner.nextLine());
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("File Not Found");
+        } catch (IOException e) {
+            System.out.println("IOException");
         }
 
-        return arrayList;
+        return linesRead;
     }
 
     public static void removeEvenNumbers(ArrayList<Integer> arrayList) {
@@ -52,15 +53,15 @@ public class ArrayListHome {
         }
     }
 
-    public static ArrayList<Integer> getListWithoutDuplicates(ArrayList<Integer> arrayList) {
-        ArrayList<Integer> uniqueNumbers = new ArrayList<>(arrayList.size());
+    public static ArrayList<Integer> getListWithoutDuplicates(ArrayList<Integer> list) {
+        ArrayList<Integer> listWithoutDuplicates = new ArrayList<>(list.size());
 
-        for (Integer e : arrayList) {
-            if (!uniqueNumbers.contains(e)) {
-                uniqueNumbers.add(e);
+        for (Integer e : list) {
+            if (!listWithoutDuplicates.contains(e)) {
+                listWithoutDuplicates.add(e);
             }
         }
 
-        return uniqueNumbers;
+        return listWithoutDuplicates;
     }
 }
