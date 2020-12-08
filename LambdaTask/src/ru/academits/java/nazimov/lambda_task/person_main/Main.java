@@ -2,29 +2,27 @@ package ru.academits.java.nazimov.lambda_task.person_main;
 
 import ru.academits.java.nazimov.lambda_task.person.Person;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) {
-        ArrayList<Person> peoples = new ArrayList<>();
+        List<Person> peoples = new ArrayList<>(Arrays.asList(
+                (new Person("Ivan", 22)),
+                (new Person("Ira", 11)),
+                (new Person("Misha", 12)),
+                (new Person("Sasha", 30)),
+                (new Person("Ira", 26)),
+                (new Person("Tanya", 27))
+        ));
 
-        peoples.add(new Person("Ivan", 22));
-        peoples.add(new Person("Ira", 11));
-        peoples.add(new Person("Misha", 12));
-        peoples.add(new Person("Sasha", 30));
-        peoples.add(new Person("Ira", 26));
-        peoples.add(new Person("Tanya", 27));
-
-        Stream<String> peopleNames1 = peoples.stream()
+        List<String> namesList = peoples.stream()
                 .map(Person::getName)
-                .distinct();
-        peopleNames1.forEach(value -> System.out.print(value + " "));
-        System.out.println();
+                .distinct()
+                .collect(Collectors.toList());
+        System.out.println(namesList);
         System.out.println();
 
         String peopleNames2 = peoples.stream()
@@ -33,7 +31,6 @@ public class Main {
                 .collect(Collectors.joining(", ", "Имена: ", "."));
         System.out.println(peopleNames2);
         System.out.println();
-
 
         Stream<Person> peopleListMinors = peoples.stream()
                 .filter(person -> person.getAge() < 18)
@@ -60,7 +57,7 @@ public class Main {
         System.out.print("Введите число: ");
         int count = scanner.nextInt();
 
-        DoubleStream numberRoot = DoubleStream.iterate(0, x -> x + 1).map(Math::sqrt).limit(count);
+        DoubleStream numberRoot = DoubleStream.iterate(0, x -> x < count, x -> x + 1).map(Math::sqrt);
 
         numberRoot.forEach(System.out::println);
     }
