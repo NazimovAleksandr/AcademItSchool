@@ -29,24 +29,24 @@ public class Main {
         System.out.println("Vector3.getSize = " + vector3.getSize());
         System.out.println();
 
-        vector3.setComponent(3, 33);
-        vector1.getSum(vector3);
+        vector3.setComponent(2, 33);
+        vector1.sum(vector3);
         System.out.println("Vector1 + Vector3 = " + vector1);
-        System.out.println("(Static method) Vector1 + Vector2 = " + Vector.getSum(vector1, vector2));
+        System.out.println("(Static method) Vector1 + Vector2 = " + Vector.sum(vector1, vector2));
         System.out.println();
 
-        vector3.getDifference(vector1);
+        vector3.difference(vector1);
         System.out.println("Vector3 - Vector1 = " + vector3);
-        System.out.println("(Static method) Vector1 - Vector2 = " + Vector.getDifference(vector2, vector1));
+        System.out.println("(Static method) Vector1 - Vector2 = " + Vector.difference(vector2, vector1));
         System.out.println();
 
-        vector3.getMultiplyByNumber(4);
+        vector3.multiplyByNumber(4);
         System.out.println("Vector3 * Scalar(4) = " + vector3);
-        System.out.println("(Static method) Vector1 * Vector2 = " + Vector.getScalarProduct(vector2, vector1));
+        System.out.println("(Static method) Vector1 * Vector2 = " + Vector.getScalarProduct(vector1, vector2));
         System.out.println();
 
         System.out.println("Vector1 = " + vector1);
-        vector1.getRevertVector();
+        vector1.revertVector();
         System.out.println("Revert Vector1 = " + vector1);
     }
 }
