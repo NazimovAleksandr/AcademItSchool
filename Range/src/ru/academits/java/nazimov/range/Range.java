@@ -52,8 +52,11 @@ public class Range {
     }
 
     public Range getIntersection(Range range) {
-        if (Math.max(from, range.from) < Math.min(to, range.to)) {
-            return new Range(Math.max(from, range.from), Math.min(to, range.to));
+        double maxFrom = Math.max(from, range.from);
+        double minTo = Math.min(to, range.to);
+
+        if (maxFrom < minTo) {
+            return new Range(maxFrom, minTo);
         }
 
         return null;

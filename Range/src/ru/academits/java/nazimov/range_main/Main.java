@@ -26,19 +26,47 @@ public class Main {
 
         Range range2 = new Range(5, 7);
         Range[] union = range1.getUnion(range2);
+        System.out.println("Объединение двух интервалов ");
+
+        System.out.print("Range1: ");
+        range1.print();
+
+        System.out.print(" + Range2: ");
+        range2.print();
+
+        System.out.print(" = ");
         Range.printArray(union);
 
         System.out.println();
         Range intersection = range2.getIntersection(range1);
+        System.out.println("Пересечение двух интервалов");
+
+        System.out.print("Range2: ");
+        range2.print();
+
+        System.out.print(" и Range1");
+        range1.print();
+
+        System.out.print(" = ");
 
         if (intersection != null) {
             intersection.print();
+            System.out.println();
         } else {
-            System.out.println("Range4 = null");
+            System.out.println("null");
         }
 
         System.out.println();
         Range[] difference = range1.getDifference(range2);
+        System.out.println("Расность двух интервалов");
+
+        System.out.print("Range1: ");
+        range1.print();
+
+        System.out.print(" - Range2: ");
+        range2.print();
+
+        System.out.print(" = ");
         Range.printArray(difference);
     }
 }
