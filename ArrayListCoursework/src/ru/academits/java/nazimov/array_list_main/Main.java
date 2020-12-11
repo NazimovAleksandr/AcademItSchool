@@ -2,8 +2,6 @@ package ru.academits.java.nazimov.array_list_main;
 
 import ru.academits.java.nazimov.array_list.ArrayListMyImplementation;
 
-import java.util.Iterator;
-
 public class Main {
     public static void main(String[] args) {
         ArrayListMyImplementation<Integer> arrayList = new ArrayListMyImplementation<>();
