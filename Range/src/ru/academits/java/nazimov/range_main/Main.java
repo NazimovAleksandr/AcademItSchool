@@ -68,5 +68,7 @@ public class Main {
 
         System.out.print(" = ");
         Range.printArray(difference);
+
+        System.out.println("Задача засчитана");
     }
 }
