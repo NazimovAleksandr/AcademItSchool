@@ -33,6 +33,8 @@ public class Main {
                     shapeWithSecondPerimeter, shapeWithSecondPerimeter.getWidth(), shapeWithSecondPerimeter.getHeight(),
                     shapeWithSecondPerimeter.getArea(), shapeWithSecondPerimeter.getPerimeter());
         }
+
+        System.out.println("Задача засчитана");
     }
 
     public static Shape getShapeWithMaxArea(Shape[] shapes) {
