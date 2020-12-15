@@ -7,10 +7,9 @@ public class Main {
         List<Integer> numbers1 = new List<>();
 
         numbers1.add(33);
-        numbers1.add(33);
         numbers1.add(11);
         numbers1.addFirst(0);
-        numbers1.add(4, 55);
+        numbers1.add(2, 55);
 
         System.out.println("List.getCount");
         System.out.println(numbers1.getCount());
@@ -24,12 +23,12 @@ public class Main {
         System.out.println(numbers1.get(2));
         System.out.println();
 
-        System.out.println("List.set(index 4, Integer 44)");
+        System.out.println("List.set(index 2, Integer 44)");
         System.out.println(numbers1.set(2, 44));
         System.out.println();
 
-        System.out.println("List.remove(index 4)");
-        System.out.println(numbers1.remove(4));
+        System.out.println("List.remove(index 3)");
+        System.out.println(numbers1.remove(3));
         System.out.println();
 
         System.out.println("List.remove(element 6)");

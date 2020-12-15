@@ -1,5 +1,7 @@
 package ru.academits.java.nazimov.list;
 
+import java.util.NoSuchElementException;
+
 public class List<T> {
     private ListItem<T> head;
     private int count;
@@ -9,7 +11,7 @@ public class List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= count) {
-            throw new IndexOutOfBoundsException("Интекс " + index + " за пределами длины " + count);
+            throw new IndexOutOfBoundsException("Индекс " + index + " за пределами допустимых значений (от 0, до " + (count - 1) + ")");
         }
     }
 
@@ -18,7 +20,7 @@ public class List<T> {
 
         for (int i = 0; i < count; i++) {
             if (i == index) {
-                return item;
+                break;
             }
 
             item = item.getNext();
@@ -33,7 +35,7 @@ public class List<T> {
 
     public T getFirst() {
         if (head == null) {
-            throw new NullPointerException("Список пуст, нельзя получить несуществующий элемент");
+            throw new NoSuchElementException("Список пуст, нельзя получить несуществующий элемент");
         }
 
         return head.getData();
@@ -89,13 +91,12 @@ public class List<T> {
             return;
         }
 
-        ListItem<T> item = new ListItem<>(data);
-
         ListItem<T> previousItem = getListItem(index - 1);
         ListItem<T> currentItem = previousItem.getNext();
 
+        ListItem<T> item = new ListItem<>(data, currentItem);
+
         previousItem.setNext(item);
-        item.setNext(currentItem);
         count++;
     }
 
@@ -112,7 +113,11 @@ public class List<T> {
         ListItem<T> item = head;
 
         for (int i = 0; i < count; i++) {
-            if (deletedData != null && deletedData.equals(data)) {
+            if (data != null && data.equals(deletedData)) {
+                remove(i);
+
+                return true;
+            } else if (data == null && deletedData == null) {
                 remove(i);
 
                 return true;
@@ -129,7 +134,7 @@ public class List<T> {
 
     public T removeFirst() {
         if (head == null) {
-            throw new NullPointerException("Список пуст, нельзя удалить несуществующий элемент");
+            throw new NoSuchElementException("Список пуст, нельзя удалить несуществующий элемент");
         }
 
         T data = head.getData();
@@ -140,7 +145,7 @@ public class List<T> {
     }
 
     public void revert() {
-        if (head == null || head.getNext() == null) {
+        if (count <= 1) {
             return;
         }
 
@@ -148,16 +153,18 @@ public class List<T> {
         ListItem<T> currentItem = previousItem.getNext();
         ListItem<T> nextItem = currentItem.getNext();
 
-        for (int i = 1; i < count - 1; i++) {
+        for (int i = 1; i < count; i++) {
+            if (nextItem == null) {
+                head = currentItem;
+                head.setNext(previousItem);
+
+                break;
+            }
+
             currentItem.setNext(previousItem);
             previousItem = currentItem;
             currentItem = nextItem;
             nextItem = nextItem.getNext();
-
-            if (nextItem == null) {
-                head = currentItem;
-                head.setNext(previousItem);
-            }
         }
     }
 
@@ -169,7 +176,7 @@ public class List<T> {
         }
 
         copy.head = new ListItem<>(head.getData());
-        copy.count++;
+        copy.count = count;
 
         ListItem<T> previousItem = copy.head;
 
@@ -182,8 +189,6 @@ public class List<T> {
             previousItem = copyItem;
 
             currentItem = currentItem.getNext();
-
-            copy.count++;
         }
 
         return copy;
@@ -196,6 +201,8 @@ public class List<T> {
         }
 
         StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("[");
+
         ListItem<T> item = head;
 
         for (int i = 0; i < count; i++) {
@@ -207,6 +214,7 @@ public class List<T> {
             }
         }
 
-        return "[" + stringBuilder.toString() + "]";
+        stringBuilder.append("]");
+        return stringBuilder.toString();
     }
 }
