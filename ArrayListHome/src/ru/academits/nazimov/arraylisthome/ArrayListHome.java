@@ -2,7 +2,6 @@ package ru.academits.nazimov.arraylisthome;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -27,21 +26,17 @@ public class ArrayListHome {
     }
 
     public static ArrayList<String> readLinesFromFile(String fileName) {
-        ArrayList<String> linesRead = new ArrayList<>();
+        ArrayList<String> lineList = new ArrayList<>();
 
-        try (FileReader fileReader = new FileReader(fileName)) {
-            Scanner scanner = new Scanner(fileReader);
-
+        try (Scanner scanner = new Scanner(new FileReader(fileName))) {
             while (scanner.hasNextLine()) {
-                linesRead.add(scanner.nextLine());
+                lineList.add(scanner.nextLine());
             }
         } catch (FileNotFoundException e) {
             System.out.println("File Not Found");
-        } catch (IOException e) {
-            System.out.println("IOException");
         }
 
-        return linesRead;
+        return lineList;
     }
 
     public static void removeEvenNumbers(ArrayList<Integer> arrayList) {
