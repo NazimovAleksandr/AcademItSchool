@@ -30,14 +30,14 @@ public class Main {
         System.out.println();
 
         vector3.setComponent(2, 33);
-        vector1.sum(vector3);
+        vector1.increase(vector3);
         System.out.println("Vector1 + Vector3 = " + vector1);
-        System.out.println("(Static method) Vector1 + Vector2 = " + Vector.sum(vector1, vector2));
+        System.out.println("(Static method) Vector1 + Vector2 = " + Vector.getSum(vector1, vector2));
         System.out.println();
 
-        vector3.difference(vector1);
+        vector3.deduct(vector1);
         System.out.println("Vector3 - Vector1 = " + vector3);
-        System.out.println("(Static method) Vector1 - Vector2 = " + Vector.difference(vector2, vector1));
+        System.out.println("(Static method) Vector1 - Vector2 = " + Vector.getDifference(vector2, vector1));
         System.out.println();
 
         vector3.multiplyByNumber(4);
@@ -46,7 +46,7 @@ public class Main {
         System.out.println();
 
         System.out.println("Vector1 = " + vector1);
-        vector1.revertVector();
+        vector1.revert();
         System.out.println("Revert Vector1 = " + vector1);
     }
 }

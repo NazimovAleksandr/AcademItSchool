@@ -37,7 +37,7 @@ public class Vector {
         return components.length;
     }
 
-    public void sum(Vector vector) {
+    public void increase(Vector vector) {
         if (vector.components.length > components.length) {
             components = Arrays.copyOf(components, vector.components.length);
         }
@@ -47,7 +47,7 @@ public class Vector {
         }
     }
 
-    public void difference(Vector vector) {
+    public void deduct(Vector vector) {
         if (vector.components.length > components.length) {
             components = Arrays.copyOf(components, vector.components.length);
         }
@@ -63,7 +63,7 @@ public class Vector {
         }
     }
 
-    public void revertVector() {
+    public void revert() {
         multiplyByNumber(-1);
     }
 
@@ -104,8 +104,7 @@ public class Vector {
             stringBuilder.append(e).append(", ");
         }
 
-        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length());
 
         stringBuilder.append("}");
         return stringBuilder.toString();
@@ -141,30 +140,31 @@ public class Vector {
         return Arrays.hashCode(components);
     }
 
-    public static Vector sum(Vector vector1, Vector vector2) {
+    public static Vector getSum(Vector vector1, Vector vector2) {
         int vectorSize = Math.max(vector1.components.length, vector2.components.length);
 
         Vector result = new Vector(vectorSize, vector1.components);
 
-        result.sum(vector2);
+        result.increase(vector2);
 
         return result;
     }
 
-    public static Vector difference(Vector vector1, Vector vector2) {
+    public static Vector getDifference(Vector vector1, Vector vector2) {
         int vectorSize = Math.max(vector1.components.length, vector2.components.length);
 
         Vector result = new Vector(vectorSize, vector1.components);
 
-        result.difference(vector2);
+        result.deduct(vector2);
 
         return result;
     }
 
     public static double getScalarProduct(Vector vector1, Vector vector2) {
         double result = 0;
+        int minVectorSize = Math.min(vector1.components.length, vector2.components.length);
 
-        for (int i = 0; i < Math.min(vector1.components.length, vector2.components.length); i++) {
+        for (int i = 0; i < minVectorSize; i++) {
             result += vector1.components[i] * vector2.components[i];
         }
 
