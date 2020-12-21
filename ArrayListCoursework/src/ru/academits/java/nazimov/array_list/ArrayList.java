@@ -358,7 +358,7 @@ public class ArrayList<T> implements List<T> {
 
         @Override
         public T next() {
-            if (hasNext()) {
+            if (!hasNext()) {
                 throw new NoSuchElementException("Выход за пледелы коллекции (size: " + (size - 1) + "): " + currentIndex);
             }
 
