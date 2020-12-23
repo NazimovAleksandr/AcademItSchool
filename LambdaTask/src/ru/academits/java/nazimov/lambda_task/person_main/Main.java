@@ -22,7 +22,7 @@ public class Main {
                 .map(Person::getName)
                 .distinct()
                 .collect(Collectors.toList());
-        System.out.println(namesList);
+        System.out.println("Коллекция уникальных имён: " + namesList);
         System.out.println();
 
         String peopleNames = namesList.stream()
@@ -30,8 +30,9 @@ public class Main {
         System.out.println(peopleNames);
         System.out.println();
 
+        System.out.println("Люди младше 18 лет:");
         Stream<Person> minorsList = persons.stream()
-                .filter(person -> person.getAge() < 18)
+                .filter(p -> p.getAge() < 18)
                 .peek(System.out::println);
 
         double averageAge = minorsList.collect(Collectors.averagingInt(Person::getAge));
@@ -40,13 +41,14 @@ public class Main {
 
         Map<String, Double> averageAgeByNames = persons.stream()
                 .collect(Collectors.groupingBy(Person::getName, Collectors.averagingInt(Person::getAge)));
-        System.out.println(averageAgeByNames);
+        System.out.println("Средний возраст людей по именам: " + averageAgeByNames);
         System.out.println();
 
-        Stream<Person> adultsPeople = persons.stream()
-                .filter(person -> person.getAge() >= 20 && person.getAge() <= 45)
+        System.out.println("Коллекция людей от 20 до 45 лет по убыванию");
+        Stream<Person> adults = persons.stream()
+                .filter(p -> p.getAge() >= 20 && p.getAge() <= 45)
                 .sorted((p1, p2) -> p2.getAge() - p1.getAge());
-        adultsPeople.forEach(System.out::println);
+        adults.forEach(System.out::println);
         System.out.println();
 
         Scanner scanner = new Scanner(System.in);
@@ -55,7 +57,10 @@ public class Main {
         System.out.print("Введите число: ");
         int count = scanner.nextInt();
 
-        DoubleStream numbersRoots = DoubleStream.iterate(0, x -> x + 1).map(Math::sqrt).limit(count);
+        DoubleStream numbersRoots = DoubleStream
+                .iterate(0, x -> x + 1)
+                .map(Math::sqrt)
+                .limit(count);
 
         numbersRoots.forEach(System.out::println);
     }
