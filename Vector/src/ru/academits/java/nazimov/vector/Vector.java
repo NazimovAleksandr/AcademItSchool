@@ -37,7 +37,7 @@ public class Vector {
         return components.length;
     }
 
-    public void increase(Vector vector) {
+    public void add(Vector vector) {
         if (vector.components.length > components.length) {
             components = Arrays.copyOf(components, vector.components.length);
         }
@@ -47,7 +47,7 @@ public class Vector {
         }
     }
 
-    public void deduct(Vector vector) {
+    public void subtract(Vector vector) {
         if (vector.components.length > components.length) {
             components = Arrays.copyOf(components, vector.components.length);
         }
@@ -145,7 +145,7 @@ public class Vector {
 
         Vector result = new Vector(vectorSize, vector1.components);
 
-        result.increase(vector2);
+        result.add(vector2);
 
         return result;
     }
@@ -155,7 +155,7 @@ public class Vector {
 
         Vector result = new Vector(vectorSize, vector1.components);
 
-        result.deduct(vector2);
+        result.subtract(vector2);
 
         return result;
     }

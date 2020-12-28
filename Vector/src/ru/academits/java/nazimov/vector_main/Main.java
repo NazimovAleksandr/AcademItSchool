@@ -30,12 +30,12 @@ public class Main {
         System.out.println();
 
         vector3.setComponent(2, 33);
-        vector1.increase(vector3);
+        vector1.add(vector3);
         System.out.println("Vector1 + Vector3 = " + vector1);
         System.out.println("(Static method) Vector1 + Vector2 = " + Vector.getSum(vector1, vector2));
         System.out.println();
 
-        vector3.deduct(vector1);
+        vector3.subtract(vector1);
         System.out.println("Vector3 - Vector1 = " + vector3);
         System.out.println("(Static method) Vector1 - Vector2 = " + Vector.getDifference(vector2, vector1));
         System.out.println();
