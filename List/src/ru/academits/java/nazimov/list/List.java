@@ -1,6 +1,7 @@
 package ru.academits.java.nazimov.list;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class List<T> {
     private ListItem<T> head;
@@ -109,23 +110,31 @@ public class List<T> {
             return false;
         }
 
-        T deletedData = head.getData();
-        ListItem<T> item = head;
+        if (Objects.equals(data, head.getData())) {
+            head = head.getNext();
+            count--;
 
-        for (int i = 0; i < count; i++) {
-            if (data != null && data.equals(deletedData)) {
-                remove(i);
+            return true;
+        }
 
-                return true;
-            } else if (data == null && deletedData == null) {
-                remove(i);
+        ListItem<T> previousItem = head;
+        ListItem<T> item = head.getNext();
+
+        for (int i = 1; i < count; i++) {
+            if (Objects.equals(data, item.getData())) {
+                previousItem.setNext(item.getNext());
+
+                item.setData(null);
+                item.setNext(null);
+
+                count--;
 
                 return true;
             }
 
             if (i != count - 1) {
+                previousItem = item;
                 item = item.getNext();
-                deletedData = item.getData();
             }
         }
 

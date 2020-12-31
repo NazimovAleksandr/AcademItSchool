@@ -10,12 +10,13 @@ public class Main {
         numbers1.add(11);
         numbers1.addFirst(0);
         numbers1.add(2, 55);
+        numbers1.add(6);
 
         System.out.println("List.getCount");
         System.out.println(numbers1.getCount());
         System.out.println();
 
-        System.out.println("List.getHeadData");
+        System.out.println("List.getFirst");
         System.out.println(numbers1.getFirst());
         System.out.println();
 
@@ -35,7 +36,7 @@ public class Main {
         System.out.println(numbers1.remove(Integer.valueOf(6)));
         System.out.println();
 
-        System.out.println("List.removeFirstItem");
+        System.out.println("List.removeFirst");
         System.out.println(numbers1.removeFirst());
         System.out.println();
 
