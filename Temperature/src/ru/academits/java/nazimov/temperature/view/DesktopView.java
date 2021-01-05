@@ -1,7 +1,7 @@
 package ru.academits.java.nazimov.temperature.view;
 
 import ru.academits.java.nazimov.temperature.controller.Controller;
-import ru.academits.java.nazimov.temperature.model.TemperatureConverter;
+import ru.academits.java.nazimov.temperature.model.Model;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -10,10 +10,10 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 
 public class DesktopView implements View {
-    TemperatureConverter model;
-    Controller controller;
+    private final Model model;
+    private final Controller controller;
 
-    public DesktopView(TemperatureConverter model, Controller controller) {
+    public DesktopView(Model model, Controller controller) {
         this.model = model;
         this.controller = controller;
     }
@@ -56,7 +56,7 @@ public class DesktopView implements View {
             fromTextField.setFont(new Font("Arial", Font.PLAIN, 22));
             fromTextField.setMargin(new Insets(0, 10, 0, 10));
 
-            JLabel toLabel = new JLabel(Double.toString(model.getTemperature()));
+            JLabel toLabel = new JLabel();
 
             toLabel.setPreferredSize(new Dimension(150, 50));
             toLabel.setBorder(new CompoundBorder(new LineBorder(Color.LIGHT_GRAY, 1),
@@ -71,8 +71,8 @@ public class DesktopView implements View {
             constraints.gridx = 1;
             panel.add(toLabel, constraints);
 
-            JComboBox<String> fromComboBox = new JComboBox<>(model.getComboBox());
-            JComboBox<String> toComboBox = new JComboBox<>(model.getComboBox());
+            JComboBox<String> fromComboBox = new JComboBox<>(model.getTemperatures());
+            JComboBox<String> toComboBox = new JComboBox<>(model.getTemperatures());
 
             constraints.gridx = 0;
             constraints.gridy = 2;
@@ -88,9 +88,7 @@ public class DesktopView implements View {
                     String fromTemperature = fromComboBox.getItemAt(fromComboBox.getSelectedIndex());
                     String toTemperature = toComboBox.getItemAt(toComboBox.getSelectedIndex());
 
-                    controller.convertTemperature(temperature, fromTemperature, toTemperature);
-
-                    toLabel.setText(Double.toString(model.getTemperature()));
+                    toLabel.setText(Double.toString(controller.convertTemperature(temperature, fromTemperature, toTemperature)));
                 } catch (NumberFormatException en) {
                     JOptionPane.showMessageDialog(frame, "Введите цифры", "Ошибка!", JOptionPane.ERROR_MESSAGE);
                 }
