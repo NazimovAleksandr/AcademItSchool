@@ -3,10 +3,11 @@ package ru.academits.java.nazimov.array_list;
 import java.util.*;
 
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_CAPACITY = 10;
+
     private T[] elements;
     private int size;
     private int modCount;
-    private static final int DEFAULT_CAPACITY = 10;
 
     public ArrayList() {
         //noinspection unchecked
@@ -14,8 +15,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     public ArrayList(int capacity) {
-        if (capacity <= 0) {
-            throw new IllegalArgumentException("Вместимость не может быть отрицательной или равняться нулю: " + capacity);
+        if (capacity < 0) {
+            throw new IllegalArgumentException("Вместимость (" + capacity + ") не может быть отрицательной");
         }
 
         //noinspection unchecked
@@ -24,8 +25,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Неверный индекс " + index
-                    + ", допустимые значения: от 0 до " + (size - 1));
+            throw new IndexOutOfBoundsException("Неверный индекс " + index + ", допустимые значения: от 0 до " + (size - 1));
         }
     }
 
@@ -99,22 +99,19 @@ public class ArrayList<T> implements List<T> {
             return false;
         }
 
-        //noinspection unchecked
-        ArrayList<T> collection = (ArrayList<T>) c;
-        int collectionSize = c.size();
-
         ++modCount;
 
-        if (collectionSize + size > elements.length) {
-            ensureCapacity(collectionSize + size);
-        }
+        int collectionSize = c.size();
+        ensureCapacity(collectionSize + size);
 
         int offsetElements = size - index;
         if (offsetElements > 0) {
             System.arraycopy(elements, index, elements, index + collectionSize, offsetElements);
         }
 
-        System.arraycopy(collection.elements, 0, elements, index, collectionSize);
+        // я не смог обойтись без преобразования коллекции в массив.
+        Object[] elementsData = elements;
+        System.arraycopy(c.toArray(), 0, elementsData, index, collectionSize);
 
         size += collectionSize;
         return true;
@@ -125,9 +122,7 @@ public class ArrayList<T> implements List<T> {
         if (size > 0) {
             ++modCount;
 
-            for (int i = 0; i < size; i++) {
-                elements[i] = null;
-            }
+            Arrays.fill(elements, null);
 
             size = 0;
         }
@@ -190,17 +185,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int indexOf(Object element) {
-        if (element != null) {
-            for (int i = 0; i < size; i++) {
-                if (element.equals(elements[i])) {
-                    return i;
-                }
-            }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (elements[i] == null) {
-                    return i;
-                }
+        for (int i = 0; i < size; i++) {
+            if (Objects.equals(element, elements[i])) {
+                return i;
             }
         }
 
@@ -209,17 +196,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int lastIndexOf(Object element) {
-        if (element != null) {
-            for (int i = size - 1; i >= 0; i--) {
-                if (element.equals(elements[i])) {
-                    return i;
-                }
-            }
-        } else {
-            for (int i = size - 1; i >= 0; i--) {
-                if (elements[i] == null) {
-                    return i;
-                }
+        for (int i = size - 1; i >= 0; i--) {
+            if (Objects.equals(element, elements[i])) {
+                return i;
             }
         }
 
@@ -247,26 +226,26 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean retainAll(Collection c) {
         if (c.size() == 0) {
+            clear();
             return true;
         }
 
-        boolean remove = false;
+        boolean isRemoved = false;
 
         for (int i = 0; i < size; ++i) {
             if (!c.contains(elements[i])) {
-                remove = true;
+                remove(i);
 
-                System.arraycopy(elements, i + 1, elements, i, size - i - 1);
-                --size;
                 --i;
+                isRemoved = true;
             }
         }
 
-        if (remove) {
+        if (isRemoved) {
             ++modCount;
         }
 
-        return remove;
+        return isRemoved;
     }
 
     @Override
@@ -275,34 +254,25 @@ public class ArrayList<T> implements List<T> {
             return false;
         }
 
-        boolean remove = false;
+        boolean isRemoved = false;
 
-        for (Object e : c) {
-            while (contains(e)) {
-                int index = indexOf(e);
+        for (int i = 0; i < size; ++i) {
+            while (c.contains(elements[i])) {
+                remove(i);
 
-                if (index != 1) {
-                    System.arraycopy(elements, index + 1, elements, index, size - index - 1);
-                    --size;
-
-                    remove = true;
-                }
+                isRemoved = true;
             }
         }
 
-        if (remove) {
+        if (isRemoved) {
             ++modCount;
         }
 
-        return remove;
+        return isRemoved;
     }
 
     @Override
     public boolean containsAll(Collection c) {
-        if (size == 0 && c.size() != 0) {
-            return false;
-        }
-
         for (Object e : c) {
             if (!contains(e)) {
                 return false;
@@ -359,11 +329,11 @@ public class ArrayList<T> implements List<T> {
         @Override
         public T next() {
             if (!hasNext()) {
-                throw new NoSuchElementException("Выход за пледелы коллекции (size: " + (size - 1) + "): " + currentIndex);
+                throw new NoSuchElementException("Выход за пределы коллекции (size: " + (size - 1) + "): " + currentIndex);
             }
 
             if (modCountBeforeIterator != modCount) {
-                throw new ConcurrentModificationException("Во время прохода по коллекции итератором, изменения запрещены");
+                throw new ConcurrentModificationException("Коллекция изменилась. Во время прохода итератором по коллекции, изменения запрещены");
             }
 
             ++currentIndex;
