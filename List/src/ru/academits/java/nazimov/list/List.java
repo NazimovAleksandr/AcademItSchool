@@ -124,11 +124,7 @@ public class List<T> {
             if (Objects.equals(data, item.getData())) {
                 previousItem.setNext(item.getNext());
 
-                item.setData(null);
-                item.setNext(null);
-
                 count--;
-
                 return true;
             }
 
