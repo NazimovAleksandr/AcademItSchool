@@ -128,10 +128,8 @@ public class List<T> {
                 return true;
             }
 
-            if (i != count - 1) {
-                previousItem = item;
-                item = item.getNext();
-            }
+            previousItem = item;
+            item = item.getNext();
         }
 
         return false;
