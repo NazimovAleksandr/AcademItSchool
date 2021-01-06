@@ -11,6 +11,7 @@ public class Main {
         numbers1.addFirst(0);
         numbers1.add(2, 55);
         numbers1.add(6);
+        numbers1.add(6);
 
         System.out.println("List.getCount");
         System.out.println(numbers1.getCount());
