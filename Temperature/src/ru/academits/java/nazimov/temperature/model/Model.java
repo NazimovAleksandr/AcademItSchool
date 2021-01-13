@@ -1,7 +1,9 @@
 package ru.academits.java.nazimov.temperature.model;
 
-public interface Model {
-    String[] getTemperatures();
+import ru.academits.java.nazimov.temperature.model.scales.Scale;
 
-    double convert(double temperature, String fromTemperature, String toTemperature);
+public interface Model {
+    Scale[] getScale();
+
+    double convert(double temperature, Scale fromTemperature, Scale toTemperature);
 }
