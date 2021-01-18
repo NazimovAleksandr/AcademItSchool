@@ -109,9 +109,11 @@ public class ArrayList<T> implements List<T> {
             System.arraycopy(elements, index, elements, index + collectionSize, offsetElements);
         }
 
-        // я не смог обойтись без преобразования коллекции в массив.
-        Object[] elementsData = elements;
-        System.arraycopy(c.toArray(), 0, elementsData, index, collectionSize);
+        int i = index;
+        for (T e : c) {
+            elements[i] = e;
+            i++;
+        }
 
         size += collectionSize;
         return true;
@@ -122,7 +124,7 @@ public class ArrayList<T> implements List<T> {
         if (size > 0) {
             ++modCount;
 
-            Arrays.fill(elements, null);
+            Arrays.fill(elements, 0, size, null);
 
             size = 0;
         }
@@ -138,7 +140,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T set(int index, T element) {
         checkIndex(index);
-        ++modCount;
 
         T oldElement = elements[index];
         elements[index] = element;
@@ -282,13 +283,14 @@ public class ArrayList<T> implements List<T> {
         return true;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public Object[] toArray(Object[] array) {
+    public <T1> T1[] toArray(T1[] array) {
         if (array.length < size) {
-            return Arrays.copyOf(elements, size, array.getClass());
+            //noinspection unchecked
+            return (T1[]) Arrays.copyOf(elements, size, array.getClass());
         }
 
+        //noinspection SuspiciousSystemArraycopy
         System.arraycopy(elements, 0, array, 0, size);
 
         if (array.length > size) {
