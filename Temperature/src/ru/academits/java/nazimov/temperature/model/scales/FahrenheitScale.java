@@ -1,6 +1,6 @@
 package ru.academits.java.nazimov.temperature.model.scales;
 
-public class Fahrenheit implements Scale {
+public class FahrenheitScale implements TemperatureScale {
     @Override
     public double convertFromCelsius(double temperature) {
         return temperature * 9 / 5 + 32;

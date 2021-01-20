@@ -1,7 +1,7 @@
 package ru.academits.java.nazimov.temperature.view;
 
-import ru.academits.java.nazimov.temperature.model.Model;
-import ru.academits.java.nazimov.temperature.model.scales.Scale;
+import ru.academits.java.nazimov.temperature.model.TemperatureConverter;
+import ru.academits.java.nazimov.temperature.model.scales.TemperatureScale;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -10,9 +10,9 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 
 public class DesktopView implements View {
-    private final Model model;
+    private final TemperatureConverter model;
 
-    public DesktopView(Model model) {
+    public DesktopView(TemperatureConverter model) {
         this.model = model;
     }
 
@@ -69,8 +69,8 @@ public class DesktopView implements View {
             constraints.gridx = 1;
             panel.add(toLabel, constraints);
 
-            JComboBox<Scale> fromComboBox = new JComboBox<>(model.getScale());
-            JComboBox<Scale> toComboBox = new JComboBox<>(model.getScale());
+            JComboBox<TemperatureScale> fromComboBox = new JComboBox<>(model.getTemperatureScales());
+            JComboBox<TemperatureScale> toComboBox = new JComboBox<>(model.getTemperatureScales());
 
             constraints.gridx = 0;
             constraints.gridy = 2;
@@ -83,11 +83,11 @@ public class DesktopView implements View {
             button.addActionListener(e -> {
                 try {
                     double temperature = Double.parseDouble(fromTextField.getText());
-                    Scale fromScale = fromComboBox.getItemAt(fromComboBox.getSelectedIndex());
-                    Scale toScale = toComboBox.getItemAt(toComboBox.getSelectedIndex());
+                    TemperatureScale fromScale = fromComboBox.getItemAt(fromComboBox.getSelectedIndex());
+                    TemperatureScale toScale = toComboBox.getItemAt(toComboBox.getSelectedIndex());
 
                     toLabel.setText(Double.toString(model.convert(temperature, fromScale, toScale)));
-                } catch (NumberFormatException en) {
+                } catch (NumberFormatException nfe) {
                     JOptionPane.showMessageDialog(frame, "Введите число", "Ошибка!", JOptionPane.ERROR_MESSAGE);
                 }
             });

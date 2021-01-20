@@ -1,18 +1,18 @@
 package ru.academits.java.nazimov.temperature.model.scales;
 
-public class Kelvin implements Scale {
+public class CelsiusScale implements TemperatureScale {
     @Override
     public double convertFromCelsius(double temperature) {
-        return temperature + 273.15;
+        return temperature;
     }
 
     @Override
     public double convertToCelsius(double temperature) {
-        return temperature - 273.15;
+        return temperature;
     }
 
     @Override
     public String toString() {
-        return "Кельвин";
+        return "Цельсия";
     }
 }
