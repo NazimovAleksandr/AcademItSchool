@@ -6,7 +6,7 @@ public class Main {
     public static void main(String[] args) {
         HashTable<String> words1 = new HashTable<>();
 
-        String s = "String";
+        String s = null;
 
         words1.add("String2");
         words1.add("String3");
@@ -14,6 +14,8 @@ public class Main {
         words1.add("String3");
         words1.add(s);
 
+        System.out.println("Words1");
+        System.out.println("Size: " + words1.size());
         System.out.print(words1);
         System.out.println();
 
@@ -21,7 +23,7 @@ public class Main {
 
         words2.addAll(words1);
 
+        System.out.println("Words2");
         System.out.println(words2);
-
     }
 }
