@@ -4,7 +4,7 @@ import ru.academits.java.nazimov.tree.Tree;
 
 public class Main {
     public static void main(String[] args) {
-        Tree<Integer> number = new Tree<>();
+        Tree<Integer> number = new Tree<>(Integer::compare);
 
         number.add(8);
         number.add(3);
@@ -16,28 +16,37 @@ public class Main {
         number.add(7);
         number.add(13);
 
-        System.out.println("Tree getNodeCount: " + number.getNodeCount());
+        System.out.println("Tree getSize: " + number.getSize());
         System.out.println();
 
-        System.out.println("Tree contains(15): " + number.contains(15));
+        System.out.println("Tree contains(13): " + number.contains(13));
         System.out.println();
 
         System.out.println("Tree toPassInDepth: ");
-        number.toPassInDepth();
+        number.passInDepth(integer -> System.out.print("[" + integer + "] "));
         System.out.println();
         System.out.println();
 
         System.out.println("Tree toPassInDepth: Recursive");
-        number.toPassInDepthRecursive();
+        number.passInDepthRecursive(integer -> System.out.print("[" + integer + "] "));
         System.out.println();
         System.out.println();
 
         System.out.println("Tree toPassInWide: ");
-        number.toPassInWide();
+        number.passInWidth(integer -> System.out.print("[" + integer + "] "));
         System.out.println();
         System.out.println();
 
-        System.out.println("Tree remove(8): " + number.remove(8));
-        number.toPassInWide();
+        number.add(8);
+        System.out.println("Tree toPassInWide: ");
+        number.passInWidth(integer -> System.out.print("[" + integer + "] "));
+        System.out.println();
+        System.out.println();
+
+        System.out.println("Size " + number.getSize());
+        System.out.println("Tree remove(3): " + number.remove(3));
+        number.passInWidth(integer -> System.out.print("[" + integer + "] "));
+        System.out.println();
+        System.out.println("Size " + number.getSize());
     }
 }
