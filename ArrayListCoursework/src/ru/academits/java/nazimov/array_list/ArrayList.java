@@ -226,6 +226,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean retainAll(Collection c) {
+        if (size == 0) {
+            return false;
+        }
+
         if (c.size() == 0) {
             clear();
             return true;
