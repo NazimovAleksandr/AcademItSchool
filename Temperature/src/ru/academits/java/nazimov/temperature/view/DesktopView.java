@@ -10,10 +10,10 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 
 public class DesktopView implements View {
-    private final TemperatureConverter model;
+    private final TemperatureConverter converter;
 
-    public DesktopView(TemperatureConverter model) {
-        this.model = model;
+    public DesktopView(TemperatureConverter converter) {
+        this.converter = converter;
     }
 
     @Override
@@ -69,8 +69,8 @@ public class DesktopView implements View {
             constraints.gridx = 1;
             panel.add(toLabel, constraints);
 
-            JComboBox<TemperatureScale> fromComboBox = new JComboBox<>(model.getTemperatureScales());
-            JComboBox<TemperatureScale> toComboBox = new JComboBox<>(model.getTemperatureScales());
+            JComboBox<TemperatureScale> fromComboBox = new JComboBox<>(converter.getTemperatureScales());
+            JComboBox<TemperatureScale> toComboBox = new JComboBox<>(converter.getTemperatureScales());
 
             constraints.gridx = 0;
             constraints.gridy = 2;
@@ -86,7 +86,7 @@ public class DesktopView implements View {
                     TemperatureScale fromScale = fromComboBox.getItemAt(fromComboBox.getSelectedIndex());
                     TemperatureScale toScale = toComboBox.getItemAt(toComboBox.getSelectedIndex());
 
-                    toLabel.setText(Double.toString(model.convert(temperature, fromScale, toScale)));
+                    toLabel.setText(Double.toString(converter.convert(temperature, fromScale, toScale)));
                 } catch (NumberFormatException nfe) {
                     JOptionPane.showMessageDialog(frame, "Введите число", "Ошибка!", JOptionPane.ERROR_MESSAGE);
                 }

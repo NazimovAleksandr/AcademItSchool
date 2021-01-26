@@ -12,8 +12,8 @@ public class Main {
                 new KelvinScale()
         };
 
-        TemperatureConverter model = new Converter(scales);
-        View view = new DesktopView(model);
+        TemperatureConverter converter = new Converter(scales);
+        View view = new DesktopView(converter);
 
         view.start();
     }
