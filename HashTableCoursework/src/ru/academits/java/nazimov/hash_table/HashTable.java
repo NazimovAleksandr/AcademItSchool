@@ -3,21 +3,23 @@ package ru.academits.java.nazimov.hash_table;
 import java.util.*;
 
 public class HashTable<T> implements Collection<T> {
-    @SuppressWarnings("FieldCanBeLocal")
-    private final int DEFAULT_LENGTH = 20;
+    private final static int DEFAULT_LENGTH = 20;
 
-    private final ArrayList<T>[] arrayLists;
+    private final ArrayList<T>[] lists;
     private int size;
     private int modCount;
 
     public HashTable() {
         //noinspection unchecked
-        arrayLists = new ArrayList[DEFAULT_LENGTH];
+        lists = new ArrayList[DEFAULT_LENGTH];
     }
 
     public HashTable(int arrayLength) {
+        if (arrayLength <= 0) {
+            throw new IllegalArgumentException("Размер таблици " + arrayLength + " не может равняться нулю и быть отрицательным");
+        }
         //noinspection unchecked
-        arrayLists = new ArrayList[arrayLength];
+        lists = new ArrayList[arrayLength];
     }
 
     private int getElementIndexInArray(Object element) {
@@ -27,7 +29,7 @@ public class HashTable<T> implements Collection<T> {
 
         int hashCode = element.hashCode();
 
-        return Math.abs(hashCode % arrayLists.length);
+        return Math.abs(hashCode % lists.length);
     }
 
     @Override
@@ -44,7 +46,7 @@ public class HashTable<T> implements Collection<T> {
     public boolean contains(Object element) {
         int index = getElementIndexInArray(element);
 
-        return arrayLists[index].contains(element);
+        return lists[index].contains(element);
     }
 
     @Override
@@ -54,17 +56,15 @@ public class HashTable<T> implements Collection<T> {
 
     @Override
     public Object[] toArray() {
-        ArrayList<T> array = new ArrayList<>();
+        Object[] array = new Object[size];
+        int i = 0;
 
-        for (ArrayList<T> e : arrayLists) {
-            for (T t : e) {
-                if (t != null) {
-                    array.add(t);
-                }
-            }
+        for (T e: this) {
+            array[i] = e;
+            i++;
         }
 
-        return array.toArray();
+        return array;
     }
 
     @Override
@@ -91,15 +91,11 @@ public class HashTable<T> implements Collection<T> {
     public boolean add(T element) {
         int index = getElementIndexInArray(element);
 
-        if (arrayLists[index] == null) {
-            arrayLists[index] = new ArrayList<>(Collections.singletonList(element));
-
-            size++;
-            modCount++;
-            return true;
+        if (lists[index] == null) {
+            lists[index] = new ArrayList<>();
         }
 
-        arrayLists[index].add(element);
+        lists[index].add(element);
 
         size++;
         modCount++;
@@ -108,9 +104,13 @@ public class HashTable<T> implements Collection<T> {
 
     @Override
     public boolean remove(Object element) {
+        if (size == 0) {
+            return false;
+        }
+
         int index = getElementIndexInArray(element);
 
-        if (arrayLists[index].remove(element)) {
+        if (lists[index].remove(element)) {
             size--;
             modCount++;
 
@@ -137,9 +137,8 @@ public class HashTable<T> implements Collection<T> {
             return false;
         }
 
-        for (Object e : c) {
-            //noinspection unchecked
-            add((T) e);
+        for (T e : c) {
+            add(e);
         }
 
         return true;
@@ -147,19 +146,22 @@ public class HashTable<T> implements Collection<T> {
 
     @Override
     public boolean removeAll(Collection<?> c) {
-        if (c.size() == 0) {
+        if (c.size() == 0 || size == 0) {
             return false;
         }
 
-        int index;
         boolean isRemoved = false;
+        int index;
 
         for (Object e : c) {
             index = getElementIndexInArray(e);
 
-            if (arrayLists[index].removeAll(c)) {
-                isRemoved = true;
-                size--;
+            for (int i = 0; i < lists[index].size(); i++) {
+                //noinspection SuspiciousMethodCalls
+                if (lists[index].remove(e)) {
+                    isRemoved = true;
+                    size--;
+                }
             }
         }
 
@@ -172,6 +174,10 @@ public class HashTable<T> implements Collection<T> {
 
     @Override
     public boolean retainAll(Collection<?> c) {
+        if (size == 0) {
+            return false;
+        }
+
         if (c.size() == 0) {
             clear();
             return true;
@@ -179,8 +185,8 @@ public class HashTable<T> implements Collection<T> {
 
         boolean isRemoved = false;
 
-        for (ArrayList<T> e : arrayLists) {
-            if (e.retainAll(c)) {
+        for (ArrayList<T> e : lists) {
+            if (!c.contains(e)) {
                 isRemoved = true;
                 size--;
             }
@@ -195,7 +201,7 @@ public class HashTable<T> implements Collection<T> {
 
     @Override
     public void clear() {
-        Arrays.fill(arrayLists, null);
+        Arrays.fill(lists, null);
         size = 0;
         modCount++;
     }
@@ -206,13 +212,12 @@ public class HashTable<T> implements Collection<T> {
         stringBuilder.append("[").append(System.lineSeparator());
 
         if (size > 0) {
-            for (ArrayList<T> e : arrayLists) {
-
-                if (e != null) {
+            for (ArrayList<T> list : lists) {
+                if (list != null) {
                     stringBuilder.append("[");
 
-                    for (T d : e) {
-                        stringBuilder.append(d).append(", ");
+                    for (T e : list) {
+                        stringBuilder.append(e).append(", ");
                     }
 
                     char symbol = stringBuilder.charAt(stringBuilder.length() - 1);
@@ -236,7 +241,7 @@ public class HashTable<T> implements Collection<T> {
     private class MyListIterator implements Iterator<T> {
         private int elementsPassed = 0;
         private int arrayIndex = 0;
-        private int elementIndex = -1;
+        private int listIndex = -1;
         private final int modCountBeforeIterator = modCount;
 
         @Override
@@ -257,16 +262,16 @@ public class HashTable<T> implements Collection<T> {
             elementsPassed++;
             T element = null;
 
-            while (arrayIndex < arrayLists.length) {
-                if (arrayLists[arrayIndex] != null && elementIndex < arrayLists[arrayIndex].size() - 1) {
-                    elementIndex++;
+            while (arrayIndex < lists.length) {
+                if (lists[arrayIndex] != null && listIndex < lists[arrayIndex].size() - 1) {
+                    listIndex++;
 
-                    element = arrayLists[arrayIndex].get(elementIndex);
+                    element = lists[arrayIndex].get(listIndex);
 
                     break;
                 }
 
-                elementIndex = -1;
+                listIndex = -1;
                 arrayIndex++;
             }
 
