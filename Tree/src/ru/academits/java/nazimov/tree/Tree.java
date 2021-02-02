@@ -1,7 +1,9 @@
 package ru.academits.java.nazimov.tree;
 
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.LinkedList;
+import java.util.Queue;
 import java.util.function.Consumer;
 
 public class Tree<T> {
@@ -13,19 +15,44 @@ public class Tree<T> {
         this.comparator = comparator;
     }
 
+    public Tree() {
+        this.comparator = null;
+    }
+
     public int getSize() {
         return size;
     }
 
+    private int getComparisonResult(T data1, T data2) {
+        int result;
+
+        if (comparator != null) {
+            result = comparator.compare(data1, data2);
+        } else {
+            //noinspection unchecked
+            result = ((Comparable<T>)data1).compareTo(data2);
+        }
+
+        return result;
+    }
+
+    private void checkData(T data) {
+        if (comparator == null && !(data instanceof Comparable)) {
+            throw new IllegalArgumentException(
+                    "Класс " + data.getClass() + " должен реализовывать интерфейс Comparable<T> " +
+                            " или передайте Comparator<T> в конструктов");
+        }
+    }
+
     private TreeNode<T> getParentNode(T data) {
-        int comparisonResult = comparator.compare(data, root.getData());
+        int comparisonResult = getComparisonResult(data, root.getData());
 
         if (comparisonResult == 0) {
             return root;
         }
 
-        TreeNode<T> parentNode;
         TreeNode<T> currentNode = root;
+        TreeNode<T> parentNode;
 
         while (true) {
             parentNode = currentNode;
@@ -40,7 +67,7 @@ public class Tree<T> {
                 return parentNode;
             }
 
-            comparisonResult = comparator.compare(data, currentNode.getData());
+            comparisonResult = getComparisonResult(data, currentNode.getData());
 
             if (comparisonResult == 0) {
                 return parentNode;
@@ -49,6 +76,8 @@ public class Tree<T> {
     }
 
     public void add(T data) {
+        checkData(data);
+
         size++;
 
         if (root == null) {
@@ -61,7 +90,7 @@ public class Tree<T> {
         TreeNode<T> right = node.getRight();
 
         while (true) {
-            if (comparator.compare(data, node.getData()) < 0) {
+            if (getComparisonResult(data, node.getData()) < 0) {
                 if (left == null) {
                     node.setLeft(new TreeNode<>(data));
                     return;
@@ -83,6 +112,8 @@ public class Tree<T> {
     }
 
     public boolean contains(T data) {
+        checkData(data);
+
         if (data == null) {
             return false;
         }
@@ -91,23 +122,17 @@ public class Tree<T> {
         TreeNode<T> left = node.getLeft();
         TreeNode<T> right = node.getRight();
 
-        switch (comparator.compare(data, node.getData())) {
-            case 0: {
-                return true;
+        int comparisonResult = getComparisonResult(data, node.getData());
+
+        if (comparisonResult == 0) {
+            return true;
+        } else if (comparisonResult < 0) {
+            if (left != null) {
+                return getComparisonResult(data, left.getData()) == 0;
             }
-            case -1: {
-                if (left != null) {
-                    if (comparator.compare(data, left.getData()) == 0) {
-                        return true;
-                    }
-                }
-            }
-            case 1: {
-                if (right != null) {
-                    if (comparator.compare(data, right.getData()) == 0) {
-                        return true;
-                    }
-                }
+        } else {
+            if (right != null) {
+                return getComparisonResult(data, right.getData()) == 0;
             }
         }
 
@@ -115,14 +140,16 @@ public class Tree<T> {
     }
 
     public boolean remove(T data) {
-        if (data == null) {
+        checkData(data);
+
+        if (size == 0 || data == null) {
             return false;
         }
 
         TreeNode<T> previousNode = getParentNode(data);
         TreeNode<T> currentNode;
 
-        int comparisonResult = comparator.compare(data, previousNode.getData());
+        int comparisonResult = getComparisonResult(data, previousNode.getData());
 
         if (comparisonResult < 0) {
             currentNode = previousNode.getLeft();
@@ -153,7 +180,7 @@ public class Tree<T> {
             return false;
         }
 
-        if (comparator.compare(data, currentNode.getData()) == 0) {
+        if (getComparisonResult(data, currentNode.getData()) == 0) {
             if (currentNode.getLeft() == null && currentNode.getRight() == null) {
                 if (previousNode.getLeft() == currentNode) {
                     previousNode.setLeft(null);
@@ -198,7 +225,9 @@ public class Tree<T> {
                 currentNode = currentNode.getLeft();
             }
 
-            previousNode.setLeft(currentNode.getRight());
+            if (previousNode.getLeft() == currentNode) {
+                previousNode.setLeft(currentNode.getRight());
+            }
 
             if (parent.getRight() == removedNode) {
                 parent.setRight(currentNode);
@@ -206,8 +235,13 @@ public class Tree<T> {
                 parent.setLeft(currentNode);
             }
 
-            currentNode.setLeft(removedNode.getLeft());
-            currentNode.setRight(removedNode.getRight());
+            if (currentNode != removedNode.getLeft()) {
+                currentNode.setLeft(removedNode.getLeft());
+            }
+
+            if (currentNode != removedNode.getRight()) {
+                currentNode.setRight(removedNode.getRight());
+            }
 
             size--;
             return true;
@@ -221,12 +255,12 @@ public class Tree<T> {
             return;
         }
 
-        LinkedList<TreeNode<T>> queue = new LinkedList<>();
+        Queue<TreeNode<T>> queue = new LinkedList<>();
 
         queue.add(root);
 
         while (!queue.isEmpty()) {
-            TreeNode<T> node = queue.pollFirst();
+            TreeNode<T> node = queue.poll();
 
             consumer.accept(node.getData());
 
@@ -245,7 +279,7 @@ public class Tree<T> {
             return;
         }
 
-        LinkedList<TreeNode<T>> stack = new LinkedList<>();
+        Deque<TreeNode<T>> stack = new LinkedList<>();
 
         stack.add(root);
 
